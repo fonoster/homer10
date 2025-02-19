@@ -1,6 +1,6 @@
 volumes:
-    grafana_data: {}
-    clickhouse_data: {}
+  grafana_data: {}
+  clickhouse_data: {}
 
 services:
   grafana:
@@ -107,3 +107,34 @@ services:
     logging:
       options:
         max-size: "50m"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    expose:
+      - 9100
+    logging:
+      options:
+        max-size: "10m"
+  
+  vector:
+    image: timberio/vector:0.31.0-alpine
+    container_name: vector
+    restart: unless-stopped
+    volumes:
+      - ./vector/vector.toml:/etc/vector/vector.toml:ro
+    depends_on:
+      - qryn
+    logging:
+      options:
+        max-size: "10m"
