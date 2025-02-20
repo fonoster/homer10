@@ -35,6 +35,7 @@ services:
       - CAP_NET_ADMIN
       - CAP_NET_RAW
     command:
+      # Replace this IP with the one for your Homer instance
       ./heplify -e -hs 67.205.155.117:9060 -m SIPRTCP -dd -zf -l info
     network_mode: host
     restart: unless-stopped
