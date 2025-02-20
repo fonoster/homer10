@@ -1,17 +1,13 @@
 # Minimal Homer 10  🔭
 
-This repository contains a minimal Docker Compose setup for the Homer 10. It is based on the [Homer 10](https://github.com/sipcapture/homer-docker) project, but removed the unnecessary components and simplified the setup.
+This repository contains a minimal Docker Compose setup for the Homer 10. It is based on the [Homer 10](https://github.com/sipcapture/homer-docker) project, but removed the unnecessary components and simplified the setup. This setup includes the following components:
 
-## What's Inside
-
-This setup includes the following components:
-
-- **Grafana** provides interactive dashboards (including Call Flow, HEP Stats, and CDR Search) to visualize call and system metrics.
-- **ClickHouse** stores OpenTelemetry and Zipkin trace data, which is later used for tracing and alerting.
-- **Qryn** acts as the gateway for metrics, logs, and tracing data; it also supports the node graph datasource for Grafana.
-- **Heplify Server** captures HEP traffic from SIP/VoIP endpoints and pushes data (e.g., HEP logs and statistics) to Loki via the Qryn service.
-- **Vector** scrapes metrics from the Heplify server and system node-exporter, forwarding the data via Prometheus Remote Write.
-- **Node-Exporter** provides underlying system metrics for host-level monitoring.
+- Grafana
+- ClickHouse
+- Qryn
+- Heplify Server
+- Vector
+- Node-Exporter
 
 ## How to Start the Server
 
