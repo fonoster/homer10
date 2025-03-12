@@ -5,14 +5,7 @@ scrape_interval_secs = 10
 instance_tag = "heplify"
 endpoint_tag = "homer"
 
-[sources.system_scrape]
-type = "prometheus_scrape"
-endpoints = [ "http://node-exporter:9100/metrics" ]
-scrape_interval_secs = 10
-instance_tag = "system"
-endpoint_tag = "homer"
-
 [sinks.prom_write]
 type = "prometheus_remote_write"
-inputs = [ "homer_scrape", "system_scrape" ]
+inputs = [ "homer_scrape" ]
 endpoint = "http://qryn:3100/prom/remote/write"
