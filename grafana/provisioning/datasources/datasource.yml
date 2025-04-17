@@ -34,6 +34,7 @@ datasources:
           matcherRegex: ".*?[pP]-[cC]harging-[vV]ector:\\s?.*icid-value=\"?(.*?)(?:\"|;|\r|\n|\r\n)"
           url: '/d/homer10/call-flow?var-search=$${__value.raw}'
           urlDisplayLabel: 'Call Flow'
+
   - name: Tempo
     type: tempo
     access: proxy
@@ -56,6 +57,7 @@ datasources:
         datasourceUid: prometheus
       lokiSearch:
         datasourceUid: loki
+
   - name: Prometheus
     type: prometheus
     access: proxy

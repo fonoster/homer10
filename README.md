@@ -7,7 +7,6 @@ This repository contains a minimal Docker Compose setup for the Homer 10. It is 
 - Qryn
 - Heplify Server
 - Vector
-- Node-Exporter
 
 ## How to Start the Server
 

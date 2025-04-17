@@ -4,19 +4,16 @@ volumes:
 
 services:
   grafana:
-    image: grafana/grafana-oss:10.4.3
+    image: grafana/grafana:11.1.1
     container_name: grafana
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
     environment:
-      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_USERS_DEFAULT_THEME=light
       - GF_EXPLORE_ENABLED=true
-      - GF_ALERTING_ENABLED=false
-      - GF_UNIFIED_ALERTING_ENABLED=true
       - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=qxip-flow-panel
       - GF_INSTALL_PLUGINS=https://github.com/metrico/grafana-flow/releases/download/v10.0.10/qxip-flow-panel-10.0.10.zip;qxip-flow-panel"
     restart: unless-stopped
@@ -36,11 +33,11 @@ services:
       - clickhouse_data:/var/lib/clickhouse
       - ./clickhouse/opentelemetry_zipkin.sql:/docker-entrypoint-initdb.d/opentelemetry_zipkin.sql
     environment:
-      - CLICKHOUSE_USER=qryn
-      - CLICKHOUSE_PASSWORD=demo
-    ports:
-      - 8123:8123
-      - 9000:9000
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+    expose:
+      - 8123
+      - 9000
     healthcheck:
       test: ['CMD', 'wget', '--spider', '-q', '127.0.0.1:8123/ping']
       interval: 1s
@@ -56,17 +53,13 @@ services:
     restart: unless-stopped
     expose:
       - 3100
-    ports:
-      - "3100:3100"
     environment:
       - CLICKHOUSE_SERVER=clickhouse-server
-      - CLICKHOUSE_AUTH=qryn:demo
-      - LOG_LEVEL=debug
+      - CLICKHOUSE_AUTH=${CLICKHOUSE_USER}:${CLICKHOUSE_PASSWORD}
       - NODE_OPTIONS="--max-old-space-size=4096"
-      - ALERTMAN_URL=http://alertman:9093
     depends_on:
-       clickhouse-server:
-         condition: service_healthy
+      clickhouse-server:
+        condition: service_healthy
     logging:
       options:
         max-size: "10m"
@@ -82,27 +75,22 @@ services:
     command:
       - './heplify-server'
     environment:
-      - "HEPLIFYSERVER_HEPADDR=0.0.0.0:9060"
-      - "HEPLIFYSERVER_HEPTCPADDR=0.0.0.0:9061"
-      - "HEPLIFYSERVER_DBSHEMA=mock"
-      - "HEPLIFYSERVER_DBDRIVER=mock"
-      - "HEPLIFYSERVER_DBADDR="
-      - "HEPLIFYSERVER_LOGLVL=info"
-      - "HEPLIFYSERVER_LOGSTD=true"
-      - "HEPLIFYSERVER_PROMADDR=0.0.0.0:9096"
-      - "HEPLIFYSERVER_DEDUP=false"
-      - "HEPLIFYSERVER_LOKIURL=http://qryn:3100/loki/api/v1/push"
-      - "HEPLIFYSERVER_LOKITIMER=1"
-      - "HEPLIFYSERVER_LOKIIPPORTLABELS=true"
+      - HEPLIFYSERVER_HEPADDR
+      - HEPLIFYSERVER_HEPTCPADDR
+      - HEPLIFYSERVER_DBSHEMA
+      - HEPLIFYSERVER_DBDRIVER
+      - HEPLIFYSERVER_DBADDR
+      - HEPLIFYSERVER_LOGLVL
+      - HEPLIFYSERVER_LOGSTD
+      - HEPLIFYSERVER_PROMADDR
+      - HEPLIFYSERVER_DEDUP
+      - HEPLIFYSERVER_LOKIURL
+      - HEPLIFYSERVER_LOKITIMER
+      - HEPLIFYSERVER_LOKIIPPORTLABELS
     restart: unless-stopped
     depends_on:
       - qryn
       - clickhouse-server
-    expose:
-      - 9060
-      - 9061
-      - 9090
-      - 9096
     logging:
       options:
         max-size: "50m"
