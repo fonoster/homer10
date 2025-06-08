@@ -12,7 +12,7 @@ This repository contains a minimal Docker Compose setup for the Homer 10. It is 
 
 First, make sure [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) are installed.
 
-Then, run the following command in the project's root directory (where the `docker-compose.yml` is located):
+Then, run the following command in the project's root directory (where the `compose.yml` is located):
 
 ```bash
 docker compose up -d
